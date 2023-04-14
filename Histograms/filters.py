@@ -65,16 +65,6 @@ class filters(Image):
         size = 7
         #size = 3
         Iout = cv2.GaussianBlur(I, (size,size), sigmaX = sigma, sigmaY = sigma)
-        # size = int(6*sigma + 1)
-        # l = (size-1)/2
-        # r = l + 1
-        # x = np.arange(-l,r,1)
-        # y = np.arange(-l,r, 1)
-        # xx, yy = np.meshgrid(x,y)
-        # sm = xx**2+ yy**2
-        # G = (1/(2*np.pi*sigma**2))*np.exp(-sm/(2*sigma**2))
-        # kernel=G
-        # Iout =  cv2.filter2D(I,-1,kernel)
         self.set_img(Iout)
         
     def __adapt(self, I, i, j, max_size):
@@ -146,38 +136,7 @@ class filters(Image):
                 Iout[i,j,2] = self.__geo(Ir,r,i,j,size)
         Iout = Iout.astype(np.uint8)
         self.set_img(Iout, "Geometric_mean")
-       
-    def wiener(self):
-        I = self.copy_img()
-        K=7
-        kernel=np.ones((K,K), dtype=np.float64)
-        pad=int((K-1)/2)
-        I_copy=cv2.copyMakeBorder(I, bottom=pad, top=pad, right=pad, left=pad, borderType=cv2.BORDER_REPLICATE)
-        print("Image", I_copy)
-        rows=I.shape[0]
-        cols=I.shape[1]
-        imgs=[]
-        
-        if I.shape[-1]==3:
-            for k in range(3):
-                m=np.zeros(I.shape[0:-1], dtype=np.float64)
-                seg2=np.zeros(I.shape[0:-1], dtype=np.float64)
-                for i in range(K):
-                    for j in range(K):
-                        m=m+(I_copy[i:i+rows, j:j+cols, k]).astype(np.float64)
-                        seg2= seg2+ ((I_copy[i:i+rows, j:j+cols,k]).astype(np.float64))**2
-                        
-                seg2=seg2/(K**2)
-                m=m/(K**2)
-                seg2=seg2-m**2
-                v=np.sum(seg2)/(rows*cols)
-                res=m+((seg2-v)/seg2)*(I[...,k]-m)
-                plt.imshow(seg2<v, cmap="gray")
-                f_res=np.where(seg2<v,m,res)*255
-                imgs.append(f_res.astype(np.uint8))    
-        Iout=cv2.merge(imgs)
-        self.set_img(Iout, "Weiner")
-       
+             
         
 if __name__ == "__main__":
     path = os.getcwd()
