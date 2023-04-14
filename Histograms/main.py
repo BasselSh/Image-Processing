@@ -11,12 +11,6 @@ import matplotlib.pyplot as plt
 import os
 from Histogram_processing import Image
 from transformations import transformation
-#__all__ = ['Histogram_processing', 'transformation']
-
-
-
-
-
 
 
 def main1():
@@ -62,8 +56,6 @@ def main2():
     path = os.getcwd()
     path_input = os.path.join(path,"inputs")
     path_output = os.path.join(path , "outputs")
-
-
 
     I=cv2.imread(path_input + '/dark_sky.jpg')
     I=cv2.resize(I,(500,500))
