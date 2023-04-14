@@ -12,29 +12,12 @@ import os
 from Histogram_processing import Image
 from transformations import transformation
 #__all__ = ['Histogram_processing', 'transformation']
-path = os.getcwd()
-path_input = os.path.join(path,"inputs")
-path_output = os.path.join(path , "outputs")
 
 
 
-I=cv2.imread(path_input + '/dark_sky.jpg')
-I=cv2.resize(I,(500,500))
-img=I.copy()
-img=cv2.resize(img,(500,500))  
 
-ob = transformation(on_origin = True, img = I)
-ob.rotate(45)
-ob.extend()
-ob.shift()
-ob.sinusoid()
-ob.piecewise()
-ob.poly()
-ob.barrel()
-ob.debarrel()
-ob.stitching()
-ob.show_history()
-  
+
+
 
 def main1():
     path = os.getcwd()
@@ -75,28 +58,29 @@ def main1():
     H2.extend(REMOVE_LOW_FREQUENCY=True)
     H2.show("Removing low frequencies")
 
+def main2():
+    path = os.getcwd()
+    path_input = os.path.join(path,"inputs")
+    path_output = os.path.join(path , "outputs")
 
 
-#Extracting profile
-# orr=cv2.imread(path_input + "/ballr.jpg", cv2.IMREAD_GRAYSCALE)
-# img=orr.copy()
-# x_prof=round(img.shape[0]/2)
-# out=profile(img, x_prof)
-# cv2.line(orr,(10,x_prof), (img.shape[1], x_prof), color=[0])
 
-# plt.figure()
-# plt.plot(np.array(range(img.shape[1])), out)
-# cv2.imwrite(path_output + "/profile.png", orr)
-# plt.show()
-# cv2.imshow("profile", orr)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+    I=cv2.imread(path_input + '/dark_sky.jpg')
+    I=cv2.resize(I,(500,500))
+    img=I.copy()
+    img=cv2.resize(img,(500,500))  
 
+    ob = transformation(on_origin = True, img = I)
+    ob.rotate(45)
+    ob.extend()
+    ob.shift()
+    ob.sinusoid()
+    ob.piecewise()
+    ob.poly()
+    ob.barrel()
+    ob.debarrel()
+    ob.stitching()
+    ob.show_history()
 
-# #projection
-# xy=1
-# proj=project_(img,xy)
-# t=np.asarray(range(img.shape[(xy+1)%2]))
-# plt.figure()
-# plt.plot(t,proj)
-# plt.show()
+if __name__ =="__main__":
+    main2()
