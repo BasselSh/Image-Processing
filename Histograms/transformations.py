@@ -11,8 +11,8 @@ from scipy.optimize import fsolve
 import Histogram_processing
 
 class transformation(Histogram_processing.Image):
-    def __init__(self, img=None,histSize=256, histRange=(0,256), CONFIG="BGR", EQUALIZE = True, pth = "default", on_origin = True ):
-        super().__init__(img ,histSize, histRange, CONFIG, EQUALIZE, pth, on_origin)
+    def __init__(self, img=None,histSize=256, histRange=(0,256), CONFIG="BGR", NORMALIZE = True, pth = "default", on_origin = True ):
+        super().__init__(img ,histSize, histRange, CONFIG, NORMALIZE, pth, on_origin)
         
         print("origin bool", self.on_origin)
         
@@ -57,7 +57,7 @@ class transformation(Histogram_processing.Image):
         Ig = I[:,:,1]
         Ir = I[:,:,2]
         Iout = []
-        if self.EQUALIZE:
+        if self.NORMALIZE:
             if REMOVE_LOW_FREQUENCY:
                 #removing low frequicies
                 Ib_min, Ib_max = self.__filter_high_frequencies(self.bH)

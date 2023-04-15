@@ -12,8 +12,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class filters(Image):
-    def __init__(self, img=None,histSize=256, histRange=(0,256), CONFIG="BGR", EQUALIZE = True, pth = "default", sequence = True ):
-        super().__init__(img ,histSize, histRange, CONFIG, EQUALIZE, pth, sequence)
+    def __init__(self, img=None,histSize=256, histRange=(0,256), CONFIG="BGR", NORMALIZE = True, pth = "default", sequence = True ):
+        super().__init__(img ,histSize, histRange, CONFIG, NORMALIZE, pth, sequence)
         self.window_size = 3
     
     def noise_saltnpepper(self):

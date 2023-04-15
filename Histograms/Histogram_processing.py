@@ -14,7 +14,7 @@ class Image:
     id_plot=0
     path_input = None
     path_output = None
-    def __init__(self, img=None,histSize=256, histRange=(0,256), CONFIG="BGR", EQUALIZE = True, pth = "default", sequence = True):
+    def __init__(self, img=None,histSize=256, histRange=(0,256), CONFIG="BGR", NORMALIZE = True, pth = "default", sequence = True):
         self.img_on = None
         self.img_org = None
         self.sequence = sequence
@@ -32,7 +32,7 @@ class Image:
         Image.path_output = os.path.join(path , "outputs")
         self.last_executed = ""
         self.histSize=256
-        self.EQUALIZE = EQUALIZE
+        self.NORMALIZE = NORMALIZE
         if CONFIG=="BGR":
             a=[0,1,2]
         else:
@@ -94,14 +94,14 @@ class Image:
         self.bH=bHist
         self.gH=gHist
         self.rH=rHist
-        if self.EQUALIZE:
-            self.equalize()
+        if self.NORMALIZE:
+            self.normalize()
         else:
             self.history_hist.append((self.bH, self.gH, self.rH))
      
-    def equalize(self):
+    def normalize(self):
         if self.last_executed == "":
-            self.last_executed = "equalized"
+            self.last_executed = "normalized"
         print("Equalizing")
         
         self.bH_not_normalized = self.bH
@@ -113,7 +113,7 @@ class Image:
         self.bH = self.bH/max_b
         self.gH = self.gH/max_g
         self.rH = self.rH/max_r
-        self.EQUALIZE = True
+        self.NORMALIZE = True
         self.history_hist.append((self.bH, self.gH, self.rH))
         if self.img_org_hist is None:
             self.img_org_hist = (self.bH, self.gH, self.rH)
