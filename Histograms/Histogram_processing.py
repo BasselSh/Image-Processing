@@ -102,7 +102,7 @@ class Image:
     def normalize(self):
         if self.last_executed == "":
             self.last_executed = "normalized"
-        print("Equalizing")
+        print("Normalizing")
         
         self.bH_not_normalized = self.bH
         self.gH_not_normalized = self.gH
@@ -224,15 +224,6 @@ class Image:
         plt.imshow(mat)
         plt.imshow(hist_mat)
         
-    def calc_error_hist(self):
-        bH0, gH0, rH0 = self.img_org_hist
-        for i in range(1,len(self.history)):
-            bH, gH, rH = self.history_hist[i]
-            Eb = np.sum((bH - bH0)**2)
-            Eg = np.sum((gH- gH0)**2)
-            Er = np.sum((rH- rH0)**2)
-            Eavg = ( Eb + Eg + Er)/3
-            print(Eavg)
 def profile(img, x):
     return img[x,:]
 

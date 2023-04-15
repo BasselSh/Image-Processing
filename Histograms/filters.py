@@ -163,7 +163,7 @@ if __name__ == "__main__":
     ob.on_current()
     
     ######Removing Noise######
-    c = 5
+    c = 4
     if c == 1:
         for Q in range(-3, 4):
             ob.counterharmonic_mean_filter(Q)
@@ -175,8 +175,6 @@ if __name__ == "__main__":
         ob.adaptive_median()
     if c == 4:    
         ob.geometric_mean()
-    if c == 5:
-        ob.wiener()
     
     ####plotting####
     ob.show_history()
