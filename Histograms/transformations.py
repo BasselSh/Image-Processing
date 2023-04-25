@@ -9,12 +9,11 @@ import numpy as np
 import os
 from scipy.optimize import fsolve
 import Histogram_processing
+import matplotlib.pyplot as plt
 
 class transformation(Histogram_processing.Image):
-    def __init__(self, img=None,histSize=256, histRange=(0,256), CONFIG="BGR", NORMALIZE = True, pth = "default", on_origin = True ):
-        super().__init__(img ,histSize, histRange, CONFIG, NORMALIZE, pth, on_origin)
-        
-        print("origin bool", self.on_origin)
+    def __init__(self, img=None,histSize=256, histRange=(0,256), CONFIG="BGR", NORMALIZE = True, pth = "default", sequence = True ):
+        super().__init__(img ,histSize, histRange, CONFIG, NORMALIZE, pth, sequence)
         
     def shift(self, amount=50):
         I = self.copy_img()
@@ -27,6 +26,58 @@ class transformation(Histogram_processing.Image):
         I1[:,:,2]=np.clip(I1[:,:,2].astype(np.int16)+amount,0,255).astype(np.uint8)
         self.set_img(I1)
     
+    def _equalize(self, I,hist):
+        Iout = np.zeros_like(I)
+        for k in range(I.shape[-1]):
+            p = np.cumsum(hist[k])
+            img = I[...,k]
+            Imax, Imin = img.max(), img.min()
+            Iout[...,k]= (Imax - Imin)*p[img] + Imin
+        return Iout
+        
+    def equalize(self):
+        I = self.copy_img()
+        hist = self.history_hist[-1]
+        Iout = self._equalize(I, hist)
+        self.set_img(Iout)
+        
+        
+    def exp_trans(self, alpha = 0.04):
+        I = self.copy_img()
+        hist = self.history_hist[-1]
+        Iout = np.zeros_like(I)
+        cl = ("blue", "green", "red")
+        
+        
+        for k in range(I.shape[-1]):
+            CH = np.cumsum(hist[k])
+            t=range(256)
+            img = I[...,k]
+            Imin= img.min()
+            Imax = img.max()
+            plt.figure(103)
+            plt.plot(t,-(1/alpha)*np.log(1-CH), color=cl[k])
+            Iout[...,k] =  np.clip(np.where(CH[img] ==1, Imax,Imin-(1/alpha)*np.log(1-CH[img])),0,255)
+        plt.savefig("equalize.png")
+        self.set_img(Iout)
+    def degree23(self):
+        I = self.copy_img()
+        hist = self.history_hist[-1]
+        Iout = np.zeros_like(I)
+        cl = ("blue", "green", "red")
+        
+        
+        for k in range(I.shape[-1]):
+            CH = np.cumsum(hist[k])
+            t=range(256)
+            img = I[...,k]
+            Imin= img.min()
+            Imax = img.max()
+            plt.figure(103)
+            plt.plot(t,np.clip(255*np.power(CH,2/3),0,255), color=cl[k])
+            Iout[...,k] =  np.clip(255*np.power(CH[img],2/3),0,255)
+        plt.savefig("equalize.png")
+        self.set_img(Iout)
     def __filter_high_frequencies(self, H):
         thresholded = np.where(H<= 10**(-2),10, H) #Filtering out small frequencies
         i_min = 0
@@ -202,15 +253,18 @@ if __name__ == "__main__":
     img=I.copy()
     img=cv2.resize(img,(500,500))  
 
-    ob = transformation(on_origin = True, img = I)
-    ob.rotate(45)
-    ob.extend()
-    ob.shift()
-    ob.sinusoid()
-    ob.piecewise()
-    ob.poly()
-    ob.barrel()
-    ob.debarrel()
-    ob.stitching()
+    ob = transformation(sequence = False, img = I)
+    ob.degree23()
+    #ob.equalize()
+    # ob.rotate(45)
+    # ob.extend()
+    # ob.shift()
+    # ob.sinusoid()
+    # ob.piecewise()
+    # ob.poly()
+    # ob.barrel()
+    # ob.debarrel()
+    # ob.stitching()
     
     ob.show_history()
+    ob.save_history("degree23")

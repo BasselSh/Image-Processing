@@ -118,9 +118,7 @@ class Image:
         if self.img_org_hist is None:
             self.img_org_hist = (self.bH, self.gH, self.rH)
         
-        
     def show(self, image = "current", name=None):
-        breakpoint()
         if image == "org":
             I = self.img_org
             
@@ -195,7 +193,7 @@ class Image:
         ignor = 0
         length = len(self.history)-ignor
         rows, cols = self.history[0].shape[0:2]
-        n_cols = 3
+        n_cols = 2
         n_rows = int(np.ceil(length/n_cols))
         
         mat = np.ones((rows*n_rows, cols*n_cols, 3 ), dtype = np.uint8)*255
